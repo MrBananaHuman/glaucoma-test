@@ -1,0 +1,232 @@
+:root {
+    --bg-dark: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent: #10b981; /* Medical safe green */
+    --accent-glow: rgba(16, 185, 129, 0.4);
+    --card-bg: #1e293b;
+    --fixation-color: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Screen state management */
+.screen {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Typography & Cards */
+.card {
+    background-color: var(--card-bg);
+    padding: 3rem 4rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    max-width: 650px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+    text-align: center;
+}
+
+.card > p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+ul {
+    list-style-type: none;
+    margin-bottom: 2.5rem;
+}
+
+ul li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+ul li::before {
+    content: "•";
+    color: var(--accent);
+    position: absolute;
+    left: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    top: -2px;
+}
+
+strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.instruction {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent) !important;
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0 !important;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--accent-glow); }
+    50% { opacity: 0.5; text-shadow: 0 0 0 transparent; }
+}
+
+/* Test Screen overrides */
+#test-screen {
+    background-color: #000000; /* Absolute black for optimal contrast */
+    position: relative;
+    cursor: none; /* Hide cursor during actual test */
+}
+
+.fixation-target {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: var(--fixation-color);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-glow);
+    z-index: 100;
+    transition: all 0.05s ease-out;
+}
+
+.fixation-target.flash {
+    background-color: #ffffff;
+    box-shadow: 0 0 40px #ffffff, 0 0 20px #10b981;
+    transform: translate(-50%, -50%) scale(3.5);
+    z-index: 200;
+    transition: none !important; /* Force instant pop over any other rules */
+}
+
+.stimulus {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #ffffff;
+    transform: translate(-50%, -50%);
+    opacity: 0; /* Managed via inline style for per-stimulus luminance */
+    z-index: 50;
+    will-change: opacity; /* GPU compositing for precise flash timing */
+}
+
+/* Result Screen specific styling */
+.result-card {
+    max-width: 750px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.subtitle {
+    font-size: 1rem !important;
+    margin-bottom: 2rem !important;
+}
+
+.canvas-wrapper {
+    background: #000000;
+    border-radius: 50%;
+    padding: 5px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+    margin-bottom: 2.5rem;
+}
+
+#result-canvas {
+    border-radius: 50%;
+    display: block;
+    background: #000000; /* Base background is blind area */
+}
+
+/* Crosshair overlay in printout */
+.canvas-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    background: 
+        linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,0.2) 49.8%, rgba(255,255,255,0.2) 50.2%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(255,255,255,0.2) 49.8%, rgba(255,255,255,0.2) 50.2%, transparent 50.2%);
+}
+
+.color-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 450px;
+    background: rgba(0,0,0,0.2);
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.color-bar {
+    flex-grow: 1;
+    height: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    background: linear-gradient(to right, rgb(0,0,127) 0%, rgb(0,0,255) 12.5%, rgb(0,255,255) 37.5%, rgb(127,255,127) 50%, rgb(255,255,0) 62.5%, rgb(255,0,0) 87.5%, rgb(127,0,0) 100%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.label {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
